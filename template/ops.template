@@ -1,0 +1,110 @@
+{{ $project_name := .project_name }}
+{{ $organizations := .organizations }}
+{{ $country := .country }}
+{{ $environment := .environment }}
+{{ $module := .module }}
+
+- [{{ $project_name }}]
+-- {{ $project_name }}
+--- Notice
+--- Release Notes
+--- Organization & Members
+{{ range $o := $organizations }}
+---- {{ $o }}
+{{ end }}
+--- Planning and Schedule
+--- {{ $project_name }} Terms(Glossary)
+--- {{ $project_name }} Environments
+--- {{ $project_name }} Release Cadence
+--- {{ $project_name }} Incident Management
+--- {{ $project_name }} Incident Notification List
+--- {{ $project_name }} Monitroing & Alert
+--- Operation Readiness
+-- Documentation
+--- Principles & Processes
+--- Physical Architecture
+---- Resource Management Process
+{{ range $c := $country }}
+---- {{$c}}
+{{ range $e := $environment }}
+----- {{$e}}
+------ vpc & network
+------ instances
+------ security groups
+------ public domain
+{{ end }}
+{{ end }}
+--- Logical Architecture
+---- Software Stack
+---- High Level Design Overview
+---- directory structure
+--- Network Architecture
+{{ range $c := $country }}
+---- {{ $c }} Network diagram
+{{ end }}
+--- Data Architecture
+---- Data Governance
+---- Logical Modeling
+---- Physical Modeling
+---- DBMS
+----- MySQL
+----- Redis
+---- Infrastructure Requirements
+----- AWS IAM
+----- AWS VPC
+----- AWS S3
+----- AWS EC2
+---- Data Analytics
+---- Data Security
+----- DBA Environment
+----- User Accounts
+----- Data Encryption
+----- DB Security Requirement
+----- Database Access control system
+--- Environments
+--- Build And Deployment
+---- Infrastructure Requirements
+---- Build And Deployment Process
+----- CI/CD Process
+---- Release Cadence
+--- Monitoring & Backup
+---- Solutions
+----- Dynatrace
+---- Backup
+----- Log Backup
+----- Database Backup
+--- Operation Manual
+--- Disaster Recovery
+---- Disaster Recovery building task backlog
+---- DR Site Diagrams
+--- Security Architecture
+---- Infrastructure Security
+---- Infrastructure Security governance
+---- SSH Keys
+---- Infrastructure Security Solution
+---- Compliance
+---- Software Benchmark
+--- Access Management
+---- AWS Access Management
+--- Service Documentation
+--- Quality Assurance Testing
+--- Service(Component) Details
+--- SSl Certification Management
+-- Problem Resolution
+--- Knowledge Base Articles
+---- Operations
+{{ range $m := $module }}
+---- {{ $m }}
+{{ end }}
+--- FAQ
+--- Issue Reports
+--- Contacts
+---- Internal & External Operation Contacts
+---- Tier 1 Partner Communication
+---- Contacts - DevOps, TechOps & Other - for Tier 1 internal escalation
+-- Miscellaneous
+--- SLA Reporting
+--- HA and DR Testing
+--- Performance Testing
+-- New Countries/Regions Onboarding
+-- Operation Readiness

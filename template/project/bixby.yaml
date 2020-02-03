@@ -1,0 +1,26 @@
+---
+
+name: "bixby wiki tree"
+template: "template/ops.template"
+vars:
+  country:
+    - KR
+    - US
+    - CN
+  environment:
+    - DEV
+    - STG
+    - PROD
+  module:
+    - ASR
+    - TTS
+  organizations:
+    - "HQ Devops"
+    - "SRI-B Operations"
+    - "SRC-B TechOps & Dev"
+    - "SRPOL TechOps & Dev"
+  project_name: BIXBY
+version: "0.0.1"
+writer:
+  email: jay-.kim@samsung.com
+  name: "Jay Kim"

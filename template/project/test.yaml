@@ -1,0 +1,9 @@
+---
+
+name: "test wiki tree"
+template: "template/test.template"
+version: "0.0.1"
+writer:
+    email: jay-.kim@samsung.com
+    name: "Jay Kim"
+

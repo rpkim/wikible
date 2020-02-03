@@ -1,38 +1,43 @@
 package main
 
 import (
-  "fmt"
-  "os"
-  "log"
-
-  "./version"
-  "github.com/mitchellh/cli"
+	"github.com/mitchellh/cli"
+	"log"
+	"os"
+	"runtime"
+	"wikible/command"
 )
 
-func init() {
-	fmt.Printf("start")
-}
+const APP_NAME = "wikible"
+const APP_VERSION = "0.0.1"
 
 func main() {
-	log.SetPrefix("")
+	if os.Getenv("GOMAXPROCS") == "" {
+		runtime.GOMAXPROCS(runtime.NumCPU())
+	}
+	//code from https://github.com/hashicorp/terraform/blob/master/main.go#L40
 	os.Exit(realMain())
 }
 
+func realMain() int {
+	// CLI Creation
+	c := cli.NewCLI(APP_NAME, APP_VERSION)
+	c.Args = os.Args[1:]
+	c.HelpWriter = os.Stdout
 
-func realMain() int {	
-	cli := &cli.CLI{
-		Args:         os.Args[1:],
-		Autocomplete: true,
-		Commands:     Commands,
-		HelpFunc:     excludeHelpFunc(Commands, []string{"plugin"}),
-		HelpWriter:   os.Stdout,
-		Name:         "wikible",
-		Version:      version.Version,
+	// Commands Registration
+	c.Commands = map[string]cli.CommandFactory{
+		"plan": func() (cli.Command, error) {
+			return &command.PlanCommand{}, nil
+		},
+		"apply": func() (cli.Command, error) {
+			return &command.ApplyCommand{}, nil
+		},
 	}
 
-	exitStatus, err := cli.Run()
+	exitStatus, err := c.Run()
 	if err != nil {
-		log.Println(err)
+		log.Fatalln(err)
 	}
 
 	os.Exit(exitStatus)
@@ -40,23 +45,18 @@ func realMain() int {
 	return 0
 }
 
-// excludeHelpFunc filters commands we don't want to show from the list of
-// commands displayed in packer's help text.
-func excludeHelpFunc(commands map[string]cli.CommandFactory, exclude []string) cli.HelpFunc {
-	// Make search slice into a map so we can use use the `if found` idiom
-	// instead of a nested loop.
-	var excludes = make(map[string]interface{}, len(exclude))
-	for _, item := range exclude {
-		excludes[item] = nil
-	}
-
-	// Create filtered list of commands
-	helpCommands := []string{}
-	for command := range commands {
-		if _, found := excludes[command]; !found {
-			helpCommands = append(helpCommands, command)
+func convert(i interface{}) interface{} {
+	switch x := i.(type) {
+	case map[interface{}]interface{}:
+		m2 := map[string]interface{}{}
+		for k, v := range x {
+			m2[k.(string)] = convert(v)
+		}
+		return m2
+	case []interface{}:
+		for i, v := range x {
+			x[i] = convert(v)
 		}
 	}
-
-	return cli.FilteredHelpFunc(helpCommands, cli.BasicHelpFunc("wikible"))
+	return i
 }
