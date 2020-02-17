@@ -73,7 +73,10 @@ func generateWikiNode(scanner *bufio.Scanner) (root *WikiNode) {
 				if prev == depth {
 					parent = currentNode.Parent
 				} else if prev > depth {
-					parent = currentNode.Parent.Parent
+					parent = currentNode.Parent
+					for i := 0; i < prev-depth; i++ {
+						parent = parent.Parent
+					}
 				} else if prev < depth {
 					parent = currentNode
 				}
