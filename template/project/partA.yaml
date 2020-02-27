@@ -1,6 +1,6 @@
 ---
 
-    name: "Ops archi part wiki tree"
+    name: "Part A wiki tree"
     template: "template/part.template"
     vars:
       projects:
