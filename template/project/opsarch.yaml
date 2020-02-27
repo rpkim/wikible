@@ -1,0 +1,18 @@
+---
+
+    name: "Ops archi part wiki tree"
+    template: "template/part.template"
+    vars:
+      projects:
+        - ERIBot
+        - Log Pipeline 1.x
+        - Log Pipeline 2.x
+      organizations:
+        - "Governance"
+        - "TA"
+        - "OpsArc & Dev"
+      part_name: OPSARCH
+    version: "0.0.1"
+    writer:
+      email: jay-.kim@samsung.com
+      name: "Jay Kim"

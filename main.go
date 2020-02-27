@@ -33,6 +33,9 @@ func realMain() int {
 		"apply": func() (cli.Command, error) {
 			return &command.ApplyCommand{}, nil
 		},
+		"get": func() (cli.Command, error) {
+			return &command.GetCommand{}, nil
+		},
 	}
 
 	exitStatus, err := c.Run()

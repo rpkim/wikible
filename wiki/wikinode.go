@@ -10,6 +10,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"io/ioutil"
 
 	rand "wikible/util"
 	api "wikible/wiki/api"
@@ -22,6 +23,7 @@ type WikiNode struct {
 	ContentID string
 	Numbering string
 	Title     string
+	Body      string
 	Sequence  int
 }
 
@@ -30,12 +32,13 @@ func (node *WikiNode) addChild(child *WikiNode) {
 }
 
 //CreateNode is for creating wiki node
-func CreateNode(parent *WikiNode, sequence int, numbering string, title string) *WikiNode {
+func CreateNode(parent *WikiNode, sequence int, numbering string, title string, body string) *WikiNode {
 	node := WikiNode{
 		Parent:    parent,
 		Numbering: numbering,
 		Sequence:  sequence,
 		Title:     title,
+		Body: body,
 	}
 	if parent != nil {
 		parent.addChild(&node)
@@ -49,6 +52,21 @@ func syntaxCheck(str string) bool {
 	return match
 }
 
+func containContentType(text string) (string, string) {
+	r, _ := regexp.Compile("@CTYPE:content(.*).ctype")	
+
+	if r.FindString(text) != "" {
+		idx := r.FindStringIndex(text)
+		runes := []rune(text)
+		safeSubstring := string(runes[idx[0]:idx[1]])
+		title := string(runes[0:idx[0]])
+		safeSubstring = strings.Trim(safeSubstring, "@CTYPE:")
+		return title, safeSubstring
+	} else {
+		return text, ""
+	}
+}
+
 func generateWikiNode(scanner *bufio.Scanner) (root *WikiNode) {
 	var currentNode *WikiNode
 	prev := 0
@@ -57,16 +75,22 @@ func generateWikiNode(scanner *bufio.Scanner) (root *WikiNode) {
 
 		//syntax check
 		if syntaxCheck(text) {
+			title, content := containContentType(text)
+			var body string
+			if content != "" {
+				body = getContent(content)
+			}
+
 			//getting the depth(length)
-			depth := len(strings.Split(text, " ")[0])
+			depth := len(strings.Split(title, " ")[0])
 			//trim two characters("-"," ")
-			text = strings.Trim(text, "- ")
+			title = strings.Trim(title, "- ")
 
 			var parent *WikiNode
 			//first time
 			if prev == 0 {
 				//first node
-				root = CreateNode(nil, 1, "1.", text)
+				root = CreateNode(nil, 1, "1.", title, body)
 				currentNode = root
 			} else {
 				//compare the previous depth and current depth
@@ -83,7 +107,7 @@ func generateWikiNode(scanner *bufio.Scanner) (root *WikiNode) {
 
 				sequence := len(parent.Child) + 1
 				numbering := parent.Numbering + strconv.Itoa(sequence) + "."
-				newNode := CreateNode(parent, sequence, numbering, text)
+				newNode := CreateNode(parent, sequence, numbering, title, body)
 				currentNode = newNode
 			}
 
@@ -122,6 +146,19 @@ func GenerateWikiNodeFromFile(filepath string) (root *WikiNode) {
 	return generateWikiNode(scanner)
 }
 
+func getContent(filepath string) string {
+	dir, err := os.Getwd()
+	if err != nil {
+		log.Fatal(err)
+	}	
+	//file read
+	dat, err := ioutil.ReadFile(dir + "/template/" + filepath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return string(dat)
+}
+
 //PrintWikiNode is for printing the wiki node
 func PrintWikiNode(wikinode *WikiNode) {
 	fmt.Println(wikinode.Numbering + " " + wikinode.Title)
@@ -134,19 +171,19 @@ func PrintWikiNode(wikinode *WikiNode) {
 
 func CreateWikiNode(wg *sync.WaitGroup, wiki *api.Wiki, space api.Space, contentID string, wikinode *WikiNode) bool {
 	defer wg.Done()
-	res, err := wiki.CreateContent(wikinode.Numbering+" "+wikinode.Title, contentID, space)
+	res, err := wiki.CreateContent(wikinode.Numbering+" "+wikinode.Title, contentID, space, wikinode.Body)
 
 	if err != nil {
 		var errorResponse api.ErrorResponse
 		err = json.Unmarshal(res, &errorResponse)
 		if err != nil {
 			//other error
-			fmt.Println("ErrorResponse Unmarshal Error")
+			fmt.Println("CreateWikiNode: ErrorResponse Unmarshal Error:", err)
 			return false
 		} else {
 			if strings.Contains(errorResponse.Message, "A page with this title already exists") {
 				newTitle := wikinode.Numbering+" "+wikinode.Title+"_"+rand.String(4)
-				res, err = wiki.CreateContent(newTitle, contentID, space)				
+				res, err = wiki.CreateContent(newTitle, contentID, space, wikinode.Body)
 				if err != nil {
 					var errorResponse api.ErrorResponse
 					err = json.Unmarshal(res, &errorResponse)

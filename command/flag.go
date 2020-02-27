@@ -18,6 +18,9 @@ func parseFlag(cmdName string, args []string, cfg *config.Config) {
 		cmd.StringVar(&cfg.StructedTextFile, "p", "", "Project Template File Path")
 		cmd.StringVar(&cfg.PageID, "i", "", "Page ID(parent ID)")
 		cmd.StringVar(&cfg.WikiAddress, "a", "", "Address of Wiki")
+	} else if cmdName == "get" {
+		cmd.StringVar(&cfg.PageID, "i", "", "Page ID(parent ID)")
+		cmd.StringVar(&cfg.WikiAddress, "a", "", "Address of Wiki")
 	}
 
 	cmd.Parse(args)

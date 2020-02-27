@@ -146,7 +146,7 @@ func (w *Wiki) GetContent(contentID string, expand []string) (*Content, error) {
 	return &content, nil
 }
 
-func createbody(title string, ancestorID string, space Space) (*bytes.Buffer, error) {
+func createbody(title string, ancestorID string, space Space, body string) (*bytes.Buffer, error) {
 	ancestor := Ancestor{
 		AncestorID: ancestorID,
 	}
@@ -155,12 +155,19 @@ func createbody(title string, ancestorID string, space Space) (*bytes.Buffer, er
 		ancestor,
 	}
 
-	page := &Page{
+	var content ContentBody
+	content.Storage.Representation = "storage"
+	content.Storage.Value = body
+
+	page := &ContentPage{
 		Title:     title,
 		Type:      "page",
 		Ancestors: ancestors,
 		Space:     space,
 	}
+
+	page.ContentBody = content
+
 
 	buf := new(bytes.Buffer)
 	json.NewEncoder(buf).Encode(page)
@@ -169,8 +176,8 @@ func createbody(title string, ancestorID string, space Space) (*bytes.Buffer, er
 }
 
 //CreateContent api
-func (w *Wiki) CreateContent(title string, ancestorID string, space Space) ([]byte, error) {
-	data, err := createbody(title, ancestorID, space)
+func (w *Wiki) CreateContent(title string, ancestorID string, space Space, body string) ([]byte, error) {
+	data, err := createbody(title, ancestorID, space, body)
 
 	addr, err := url.ParseRequestURI(w.url.String() + "/content/")
 
@@ -184,4 +191,3 @@ func (w *Wiki) CreateContent(title string, ancestorID string, space Space) ([]by
 
 	return res, nil
 }
-

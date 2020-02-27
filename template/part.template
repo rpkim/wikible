@@ -1,0 +1,56 @@
+{{ $part_name := .part_name }}
+{{ $organizations := .organizations }}
+{{ $projects := .projects }}
+
+- [{{ $part_name }}] @CTYPE:content/subpage.ctype
+-- Onboarding Guide
+-- Organization & Members @CTYPE:content/subpage.ctype
+--- Organization Chart
+{{ range $o := $organizations }}
+--- {{ $o }} @CTYPE:content/member.ctype
+{{ end }}
+-- Planning @CTYPE:content/subpage.ctype
+--- Roadmap
+-- Report @CTYPE:content/subpage.ctype
+--- Weekly Report @CTYPE:content/subpage.ctype
+---- 2020 {{ $part_name }} Weekly Reports @CTYPE:content/subpage.ctype
+----- 2020@W06-07
+-- Meeting Minutes @CTYPE:content/subpage.ctype
+--- Internal Meeting
+--- External Meeting
+-- Projects @CTYPE:content/subpage.ctype
+{{ range $p := $projects }}
+--- {{ $p }}
+---- Member & Role @CTYPE:content/role.ctype
+---- Overview @CTYPE:content/project-overview.ctype
+----- Related Links
+---- Planning
+---- Documents
+----- Reports
+----- Software Design
+----- System Design
+------ Infra Architecture
+------ Data Architecture
+------- Table Scheme
+------ Logging
+------ Monitoring
+------ IaC/CI/CD
+----- Access Management
+----- Incident Management
+----- Related Articles
+{{ end }}
+-- Glossary @CTYPE:content/glossary.ctype
+-- Miscellaneous
+--- Templates
+---- Role @CTYPE:content/role.ctype
+---- Member @CTYPE:content/member.ctype
+---- Glossary @CTYPE:content/glossary.ctype
+---- Project Overview @CTYPE:content/project-overview.ctype
+---- Workshop @CTYPE:content/workshop.ctype
+---- Subpage @CTYPE:content/subpage.ctype
+--- TR Documents @CTYPE:content/subpage.ctype
+---- TR 2020
+--- Ideation @CTYPE:content/subpage.ctype
+---- Ideation 2020
+--- How to articles @CTYPE:content/subpage.ctype
+--- Useful articles @CTYPE:content/subpage.ctype

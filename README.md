@@ -8,6 +8,26 @@ Confluence supports the template for the page of contents but the entire structu
 
 Wikible is a project for reducing the repeated tasks and providing manage code for the entire structure of wiki for the project.
 
+- You can define your wiki strucuture with count of dash("-")
+
+wiki.template
+```
+MyProject 
+- Onboarding Guide 
+- MyProject
+-- Notice 
+--- Release Notes 
+--- Organization & Members 
+--- Terms 
+--- Planning and Schedule 
+---- Roadmap 
+---- Schedule 
+```
+Based on this template, you can create the wiki tree of your own project.
+
+
+
+
 ## Authentication
 - Wikible supports `Basic access authentication` and you can use your id/password when you excute the command "apply".
 In the case of the Confluence, You should use `API Token` instead of password.
@@ -59,3 +79,6 @@ It contains the below information
   - `./wikible apply -p template/project/test.yaml -a https://rpkim.atlassian.net/wiki`
   - `./wikible apply -p template/project/test.yaml -a https://rpkim.atlassian.net/wiki -i 208584739`
 
+## TBD
+- get "curl http://mobilerndhub.sec.samsung.net/wiki/rest/api/content/487427029/child/page | jq '.results[] | {title:.title, id:.id}'
+- https://mobilerndhub.sec.samsung.net/wiki/rest/api/content/821303369?expand=body.storage

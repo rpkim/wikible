@@ -1,11 +1,20 @@
 package api
 
+type ContentPage struct {
+	Title     string `json:"title"`
+	Type      string `json:"type"`
+	Ancestors `json:"ancestors"`
+	Space     `json:"space"`
+	ContentBody	  `json:"body"`
+}
+
 //Page struct is for creating the wiki page
 type Page struct {
 	Title     string `json:"title"`
 	Type      string `json:"type"`
 	Ancestors `json:"ancestors"`
 	Space     `json:"space"`
+	Body	  `json:"body"`
 }
 
 type Ancestors []Ancestor
@@ -19,6 +28,14 @@ type Space struct {
 	SpaceID   int    `json:"id"`
 	SpaceKey  string `json:"key"`
 	SpaceName string `json:"name"`
+}
+
+//Body of wiki
+type ContentBody struct {
+	Storage struct {
+		Representation string `json:"representation"`
+		Value          string `json:"value"`
+	} `json:"storage"`
 }
 
 //Body of wiki

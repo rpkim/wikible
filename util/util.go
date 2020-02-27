@@ -15,7 +15,7 @@ func GetCredentials() (string, string) {
 	fmt.Print("Enter Username: ")
 	username, _ := reader.ReadString('\n')
 
-	fmt.Print("Enter Password: ")
+	fmt.Print("Enter Password(API Token): ")
 	bytePassword, _ := terminal.ReadPassword(int(syscall.Stdin))
 	password := string(bytePassword)
 
