@@ -4,14 +4,14 @@
     template: "template/part.template"
     vars:
       projects:
-        - ERIBot
-        - Log Pipeline 1.x
-        - Log Pipeline 2.x
+        - a
+        - b
+        - c
       organizations:
-        - "Governance"
-        - "TA"
-        - "OpsArc & Dev"
-      part_name: OPSARCH
+        - "A"
+        - "B"
+        - "C"
+      part_name: partname
     version: "0.0.1"
     writer:
       email: jay-.kim@samsung.com
