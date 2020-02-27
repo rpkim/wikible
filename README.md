@@ -36,10 +36,16 @@ In the case of the Confluence, You should use `API Token` instead of password.
 
 ## Features
 ### Template
+#### Wiki Structure Template
 Wikible supports a template and you can see the example of template in `/template/ops.template`.
 You can define your own template such as `development.template`, `projectmanage.template` and so on.
 It follows the `golang template syntax(https://golang.org/pkg/text/template/)`
 
+#### Content Template
+If you use @CTYPE:content/xxx.ctype, the page will be created with the content template.
+```
+- [{{ $part_name }}] @CTYPE:content/subpage.ctype
+```
 
 ### Project
 You can define your projects using template. you can see the examples in `/template/project/bixby.yaml`
