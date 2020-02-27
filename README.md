@@ -80,5 +80,5 @@ It contains the below information
   - `./wikible apply -p template/project/test.yaml -a https://rpkim.atlassian.net/wiki -i 208584739`
 
 ## TBD
-- get "curl http://mobilerndhub.sec.samsung.net/wiki/rest/api/content/487427029/child/page | jq '.results[] | {title:.title, id:.id}'
-- https://mobilerndhub.sec.samsung.net/wiki/rest/api/content/821303369?expand=body.storage
+- get "curl http://a/wiki/rest/api/content/487427029/child/page | jq '.results[] | {title:.title, id:.id}'
+- https://a/wiki/rest/api/content/821303369?expand=body.storage
